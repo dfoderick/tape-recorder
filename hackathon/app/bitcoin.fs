@@ -8,9 +8,23 @@
 \ OP_PUSHDATA2 0x4D
 \ OP_PUSHDATA4 0x4E
 \ OP_1NEGATE 0x4F
-\ OP_1, OP_TRUE 0x51
-\ OP_2 0x52
-\ OP_16 0x60
+: OP_TRUE 0x01 0x51 write ;
+: OP_1 OP_TRUE ;
+: OP_2 2 0x52 write ;
+: OP_3 3 0x53 write ;
+: OP_4 4 0x54 write ;
+: OP_5 5 0x55 write ;
+: OP_6 6 0x56 write ;
+: OP_7 7 0x57 write ;
+: OP_8 8 0x58 write ;
+: OP_9 9 0x59 write ;
+: OP_10 10 0x5A write ;
+: OP_11 11 0x5B write ;
+: OP_12 12 0x5C write ;
+: OP_13 13 0x5D write ;
+: OP_14 14 0x5E write ;
+: OP_15 15 0x5F write ;
+: OP_16 16 0x60 write ;
 \ OP_NOP 0x61
 \ OP_IF 0x63
 \ OP_NOTIF 0x64
@@ -36,7 +50,7 @@
 : OP_3DUP dup 2over rot 0x6F write ;
 : OP_2OVER 2over 0x70 write ;
 : OP_2ROT 2rot 0x71 write ;
-: OP_2SWAP 2swap 0x72 ;
+: OP_2SWAP 2swap 0x72 write ;
 \ OP_CAT 0x7E
 \ OP_SUBSTR 0x7F
 \ OP_LEFT 0x80
@@ -68,7 +82,7 @@
 \ OP_NUMEQUAL 0x9C
 \ OP_NUMEQUALVERIFY 0x9D
 \ OP_NUMNOTEQUAL 0x9E
-\ OP_LESSTHAN 0x9F
+: OP_LESSTHAN < 0x9F write ;
 : OP_GREATERTHAN > 0xA0 write ;
 \ OP_LESSTHANOREQUAL 0xA1
 \ OP_GREATERTHANOREQUAL 0xA2
@@ -80,7 +94,7 @@
 \ OP_SHA256 0xA8
 \ OP_HASH160 0xA9
 \ OP_HASH256 0xAA
-\ OP_CODESEPARATOR 0xAB
+: OP_CODESEPARATOR 0xAB write ;
 \ OP_CHECKSIG 0xAC
 \ OP_CHECKSIGVERIFY 0xAD
 \ OP_CHECKMULTISIG 0xAE
@@ -89,7 +103,7 @@
 \ OP_CHECKSEQUENCEVERIFY 0xB2
 \ OP_PUBKEYHASH 0xFD
 \ OP_PUBKEY 0xFE
-\ OP_INVALIDOPCODE 0xFF
+\ : OP_INVALIDOPCODE 0xFF write ;
 \ OP_RESERVED 0x50
 \ OP_VER 0x62
 \ OP_VERIF 0x65

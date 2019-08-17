@@ -24,7 +24,8 @@ include bitcoin.fs
 \ testing words
 \ simple add. 1 + 1 = 2
 : testadd recorder-on 1 PUSHDATA 1 PUSHDATA OP_ADD 2 PUSHDATA OP_EQUAL recorder-off cr . ;
-\ test
+: testadd_op recorder-on OP_1 OP_1 OP_ADD OP_2 OP_EQUAL recorder-off cr . ;
+\ testadd
 
 \ looping factorial
 \ notice I am only recording the necessary calculations for a thread of execution
