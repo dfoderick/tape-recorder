@@ -1,0 +1,26 @@
+{
+  "name": "tape-recorder",
+  "version": "1.0.0",
+  "description": "It records your application and puts it on the blockchain",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dfoderick/tape-recorder.git"
+  },
+  "keywords": [
+    "tape",
+    "recorder",
+    "bitcoin",
+    "wang",
+    "b"
+  ],
+  "author": "David Foderick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dfoderick/tape-recorder/issues"
+  },
+  "homepage": "https://github.com/dfoderick/tape-recorder#readme"
+}
