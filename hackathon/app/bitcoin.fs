@@ -2,10 +2,11 @@
 \ TODO: allow pushdata to handle multibyte data, for now assume 1 byte
 : PUSHDATA 0x01 write dup write ;
 
-\ OP_0, OP_FALSE 0x00
+: OP_FALSE 0 0x00 write ;
+: OP_0 OP_FALSE ;
 \ 01 - 4b literals
-\ OP_PUSHDATA1 0x4C
-\ OP_PUSHDATA2 0x4D
+\ OP_PUSHDATA1 0x4C ( The next byte contains the number of bytes to be pushed onto the stack.)
+\ OP_PUSHDATA2 0x4D ( The next two bytes contain the number of bytes to be pushed onto the stack in little endian order)
 \ OP_PUSHDATA4 0x4E
 \ OP_1NEGATE 0x4F
 : OP_TRUE 0x01 0x51 write ;
