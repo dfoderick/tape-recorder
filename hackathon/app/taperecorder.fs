@@ -5,11 +5,11 @@
 \ helper words
 : 3drop drop 2drop ;
 
-\ output formatting functions
+\ output formatting words
 : ## s>d <# # # #> ;
 : to-hex hex ## decimal ;
 
-\ File handling functions
+\ File handling words
 0 Value fd
 \ writes to file if a file is open
 : console-or-file fd dup 0> if write-file throw else 3drop then ;
@@ -19,11 +19,12 @@
 : write to-hex console-or-file ;
 
 \ include bitcoin opcodes here ...
-: PUSHDATA dup write ;
-: OP_ADD + 0x93 write ;
+include bitcoin.fs
 
 \ testing words
-: test recorder-on 1 PUSHDATA 2 PUSHDATA OP_ADD recorder-off . ;
+: testadd recorder-on 1 PUSHDATA 1 PUSHDATA OP_ADD 2 PUSHDATA OP_EQUAL recorder-off . ;
+\ test
 
-test
-
+: fac 1 PUSHDATA swap 1+ 1 ?do i PUSHDATA OP_MUL loop ;
+: testloop recorder-on 5 fac 120 PUSHDATA OP_EQUAL recorder-off . ;
+testloop
