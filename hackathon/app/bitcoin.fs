@@ -21,22 +21,22 @@
 \ OP_TOALTSTACK 0x6B
 \ OP_FROMALTSTACK 0x6C
 \ OP_IFDUP 0x73
-\ OP_DEPTH 0x74
+: OP_DEPTH depth 0x74 write ;
 : OP_DROP drop 0x75 write ;
 : OP_DUP dup 0x76 write ;
-\ OP_NIP 0x77
-\ OP_OVER 0x78
-\ OP_PICK 0x79
-\ OP_ROLL 0x7A
-\ OP_ROT 0x7B
+: OP_NIP nip 0x77 write ;
+: OP_OVER over 0x78 write ;
+: OP_PICK pick 0x79 write ;
+: OP_ROLL roll 0x7A write ;
+: OP_ROT rot 0x7B write ;
 : OP_SWAP swap 0x7C write ;
-\ OP_TUCK 0x7D
-\ OP_2DROP 0x6D
-\ OP_2DUP 0x6E
-\ OP_3DUP 0x6F
-\ OP_2OVER 0x70
-\ OP_2ROT 0x71
-\ OP_2SWAP 0x72
+: OP_TUCK tuck 0x7D write ;
+: OP_2DROP 2drop 0x6D write ;
+: OP_2DUP 2dup 0x6E write ;
+: OP_3DUP dup 2over rot 0x6F write ;
+: OP_2OVER 2over 0x70 write ;
+: OP_2ROT 2rot 0x71 write ;
+: OP_2SWAP 2swap 0x72 ;
 \ OP_CAT 0x7E
 \ OP_SUBSTR 0x7F
 \ OP_LEFT 0x80
@@ -48,19 +48,19 @@
 \ OP_XOR 0x86
 : OP_EQUAL = 0x87 write ;
 \ OP_EQUALVERIFY 0x88
-\ OP_1SUB 0x8C
+: OP_1SUB 1 - 0x8C write ;
 : OP_2MUL 2 * 0x8D write ;
-\ OP_2DIV 0x8E
+: OP_2DIV 2/ 0x8E write ;
 \ OP_NEGATE 0x8F
 \ OP_ABS 0x90
 \ OP_NOT 0x91
 \ OP_0NOTEQUAL 0x92
 : OP_ADD + 0x93 write ;
 : OP_1ADD 1 PUSHDATA OP_ADD 0x8B write ;
-\ OP_SUB 0x94
+: OP_SUB - 0x94 write ;
 : OP_MUL * 0x95 write ;
-\ OP_DIV 0x96
-\ OP_MOD 0x97
+: OP_DIV / 0x96 write ;
+: OP_MOD mod 0x97 write ;
 \ OP_LSHIFT 0x98
 \ OP_RSHIFT 0x99
 \ OP_BOOLAND 0x9A
