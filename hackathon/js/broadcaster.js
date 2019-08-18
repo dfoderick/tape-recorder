@@ -3,10 +3,12 @@
 
 const axios = require('axios');
 const bsv = require('bsv')
+const bsvMnemonic = require('bsv/mnemonic')
 const fs = require('fs')
 
 // if you get an error Cannot find module './wallet.json'
 // it is because wallet.json file is missing!
+// You can get one from https://tools.fullcyclemining.com/
 // {
 //     "mnemonic": "",
 //     "wif": "",
@@ -15,15 +17,23 @@ const fs = require('fs')
 const walletInfo = require(`./wallet.json`)
 
 function getPrivateKey() {
-    var bsvpk;
-    console.log(`using wif ${walletInfo.wif}`)
-    //bsvpk = bsv.PrivateKey(walletInfo.wif)
-    bsvpk = bsv.PrivateKey.fromWIF(walletInfo.wif)
+    var bsvpk
+    if (walletInfo.wif) {
+        console.log(`using wallet wif`)
+        bsvpk = bsv.PrivateKey.fromWIF(walletInfo.wif)
+    } else {
+        console.log(`using wallet mnemonic`)
+        const seed = new bsvMnemonic(walletInfo.mnemonic)
+        const hdnode = seed.toHDPrivateKey('','testnet')
+        //bsvpk = hdnode.privateKey
+        bsvpk = hdnode.deriveChild(`m/44'/0'/0'`).privateKey
+    }
     return bsvpk
   }
 
   async function explorer(url) {
     // fetch data from a url endpoint
+    console.log(url)
     const response = await axios.get(url)
     const data = await response.data
     return data
@@ -31,7 +41,6 @@ function getPrivateKey() {
 
   function getTape() {
       return fs.readFileSync('../app/tape.txt', 'utf-8')
-      // return '4c01014c0101934c010388'
   }
 
   // Here is the main function. It simply gets the tape file contents,
@@ -41,12 +50,10 @@ function getPrivateKey() {
     console.log(tape)
     const tapeScript = bsv.Script.fromHex(tape)
     console.log(tapeScript.toString())
-    // address is mgEWZ3FjNvWCswzLikjGMijsdvdV1kxzo6
-    // https://test.whatsonchain.com/address/mgEWZ3FjNvWCswzLikjGMijsdvdV1kxzo6
-    // or mgczdj3eMXFH1h8Q8YSW4aMXNLJX2YZWo7
-    // get private key
+    // https://test.whatsonchain.com/address/${fromAddress}
+    // get private key from wallet
     const pk = getPrivateKey()
-    const fromAddress = pk.toAddress()
+    const fromAddress =  bsv.Address.fromPrivateKey(pk)
  
     const url_utxo = `https://api.whatsonchain.com/v1/bsv/test/address/${fromAddress}/unspent`
 
@@ -62,6 +69,11 @@ function getPrivateKey() {
             console.log(utxos[i]["value"])
             fromUtxo = utxos[i]
             break
+        }
+
+        if (!fromUtxo) {
+            console.error(`No utxo for ${fromAddress}`)
+            process.exit()
         }
 
         // put utxo in format bsv wants
