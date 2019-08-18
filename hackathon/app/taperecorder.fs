@@ -59,3 +59,8 @@ include bitcoin.fs
 	OP_DROP ;
 : testgcd recorder-on 105 PUSHDATA 28 PUSHDATA gcd 7 PUSHDATA OP_EQUAL recorder-off cr . ;
 \ testgcd
+
+\ test high level language Hello compiled to bitcoin script
+include hack.fs
+: testhack recorder-on hello_compiled OP_5 OP_EQUAL recorder-off cr . ;
+testhack

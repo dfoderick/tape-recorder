@@ -2,17 +2,17 @@
 \ Created using BSV Editor
 \ Contents were modified (slightly) by hand to make it compatible with Tape Recorder
 \ See hack.hll and hack.hll.script for original version
-
+: hello_compiled
 \ ###
 \ ### cnt = 0x02;
 \ ###
-0x02
+0x02 PUSHDATA
 OP_TOALTSTACK
 
 \ ###
 \ ### for i in [1 .. 2]
 \ ###
-0x01
+0x01 PUSHDATA
 OP_TOALTSTACK
 
 \ ###
@@ -32,11 +32,11 @@ OP_ADD
 OP_FROMALTSTACK
 OP_FROMALTSTACK
 OP_DROP
-0x01
+0x01 PUSHDATA
 OP_ROLL
 OP_TOALTSTACK
 OP_TOALTSTACK
-0x02
+0x02 PUSHDATA
 OP_FROMALTSTACK
 OP_DROP
 OP_TOALTSTACK
@@ -58,16 +58,16 @@ OP_ADD
 OP_FROMALTSTACK
 OP_FROMALTSTACK
 OP_DROP
-0x01
+0x01 PUSHDATA
 OP_ROLL
 OP_TOALTSTACK
 OP_TOALTSTACK
 
 \ End of compiled script
 \ Added this check results for correctness
-\ result and loop index are left on the stack so gotta pop them off
+\ result and loop index are left on the alt stack so gotta pop them off
 OP_FROMALTSTACK
 OP_DROP
 OP_FROMALTSTACK
-OP_5 OP_EQUAL 
-cr .
+\ result of computation is now TOS
+;
