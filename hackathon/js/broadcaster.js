@@ -5,6 +5,13 @@ const axios = require('axios');
 const bsv = require('bsv')
 const fs = require('fs')
 
+// if you get an error Cannot find module './wallet.json'
+// it is because wallet.json file is missing!
+// {
+//     "mnemonic": "",
+//     "wif": "",
+//     "legacyAddress": ""
+// }
 const walletInfo = require(`./wallet.json`)
 
 function getPrivateKey() {
@@ -32,8 +39,8 @@ function getPrivateKey() {
   const tape = getTape()
   if (tape) {
     console.log(tape)
-
     const tapeScript = bsv.Script.fromHex(tape)
+    console.log(tapeScript.toString())
     // address is mgEWZ3FjNvWCswzLikjGMijsdvdV1kxzo6
     // https://test.whatsonchain.com/address/mgEWZ3FjNvWCswzLikjGMijsdvdV1kxzo6
     // or mgczdj3eMXFH1h8Q8YSW4aMXNLJX2YZWo7

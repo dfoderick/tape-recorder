@@ -1,0 +1,12 @@
+### A Hello app created with BSV Editor
+### To compile, open in BSV Editor However, script output file will need to be edited
+### to make it run in Tape Recorder
+cnt = 0x02;
+for i in [1 .. 2]
+{
+	cnt = cnt + i;
+}
+
+
+
+

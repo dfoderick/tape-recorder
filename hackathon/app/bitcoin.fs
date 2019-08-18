@@ -1,4 +1,8 @@
 \ bitcoin opcodes implemented in forth
+include altstack.fs
+\ defines altstack named alt with only 10 capacity
+10 altstack alt
+
 \ TODO: allow pushdata to handle multibyte data, for now assume 1 byte
 : PUSHDATA 0x01 write dup write ;
 
@@ -33,8 +37,8 @@
 \ OP_ENDIF 0x68
 \ OP_VERIFY 0x69
 \ OP_RETURN 0x6A
-\ OP_TOALTSTACK 0x6B
-\ OP_FROMALTSTACK 0x6C
+: OP_TOALTSTACK  alt altpush 0x6B write ;
+: OP_FROMALTSTACK alt altpop 0x6C write ;
 \ OP_IFDUP 0x73
 : OP_DEPTH depth 0x74 write ;
 : OP_DROP drop 0x75 write ;
