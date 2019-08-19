@@ -6,6 +6,8 @@ const bsv = require('bsv')
 const bsvMnemonic = require('bsv/mnemonic')
 const fs = require('fs')
 
+const tapefile = '../app/tape.txt'
+
 // if you get an error Cannot find module './wallet.json'
 // it is because wallet.json file is missing!
 // You can get one from https://tools.fullcyclemining.com/
@@ -40,10 +42,10 @@ function getPrivateKey() {
   }
 
   function getTape() {
-      return fs.readFileSync('../app/tape.txt', 'utf-8')
+      return fs.readFileSync(tapefile, 'utf-8')
   }
 
-  // Here is the main function. It simply gets the tape file contents,
+function storeTape() {
   // puts it into a tx and broadcasts
   const tape = getTape()
   if (tape) {
@@ -111,4 +113,19 @@ function getPrivateKey() {
   } else {
       console.error(`Tape is empty. Nothing to broadcast.`)
   }
+}
 
+// Here is the main function. It simply gets the tape file contents,
+if (process.argv.length <= 2) {
+    storeTape()
+} else {
+    if (process.argv[2] == "auto") {
+        console.log(`Waiting for changes to ${tapefile}`)
+        fs.watchFile(tapefile, (curr, prev) => {
+            console.log(`${tapefile} file Changed`)
+            storeTape()
+        })
+    } else {
+        storeTape()
+    }
+}
