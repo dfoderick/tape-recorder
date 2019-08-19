@@ -160,11 +160,77 @@ When the Layer 2 tape is chained across transactions the tape is "spliced" toget
 
 All hackathon related files are in the hackathon folder.  
 
+# Sample code
+Samples can be found in testrecorder.fs  
+
+testadd - adds two numbers  
+testfac - computes factorial  
+testsqrt - computes square root  
+testgcd - computes greatest common divisor  
+testhack - loops using high level language Hello from BSV Editor
+
 # Installing Tape Recorder
-* Install gforth
-* 
+1) Clone the repo  
+```
+git clone https://github.com/dfoderick/tape-recorder.git
+```
+2) Install gforth
+```
+sudo apt install gforth
+```
+3) Install node and npm
+```
+sudo apt-get install nodejs
+sudo apt install npm
+```
+4) Install js packages
+```
+cd ~/tape-recorder
+npm install
+```
+5) Tape Recorder broadcaster will error if tape.txt does not exist so create empty tape
+```
+touch ~/tape-recorder/hackathon/app/tape.txt
+```
+
+# Running Tape Recorder
+1) run Tape Recorder broadcaster
+```
+cd ~/tape-recorder/hackathon/js
+node broadcaster auto
+```
+Your console should say `Waiting for changes ...`
+
+2)  run Tape Recorder
+```
+cd ~/tape-recorder/hackathon/app
+gforth
+```
+gforth console will be open. Load Tape Recorder and tests.
+```
+include taperecorder.fs
+include testrecorder.fs
+```
 
 # Tape Recorder Walkthrough
+Run any of the test commands `testadd`, `testfac`, `test`, `testsqrt`, `testgcd`, `testhack`  
+Tape Recorder console should respond with `-1 ok` indicating success since -1 in Forth means `true`.
+
+As you run the tests the broadcaster console will show you the tx ids that are getting stored on the blockchain. There may be a slight delay because the node file watcher polls for changes every 5 seconds or so.  
+
+You can view the transactions and the script in any BSV testnet explorer.
+
+Experiment!
+
+The general structure of a Tape Recorder program looks like this:
+```
+ron <commands> roff .
+```
+Commands can be concatenated.
+```
+ron 4 fac op_1 op_add sqrt roff .
+```
+4! is 24. Then add 1. Then calculate the square root. The result is 5.
 
 # Storing custom script on BSV Testnet
 
