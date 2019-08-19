@@ -31,10 +31,11 @@ include altstack.fs
 : OP_15 15 0x5F write ;
 : OP_16 16 0x60 write ;
 \ OP_NOP 0x61
-\ OP_IF 0x63
+\ TODO: how to do if/then
+\ : OP_IF if 0x63 write ;
 \ OP_NOTIF 0x64
 \ OP_ELSE 0x67
-\ OP_ENDIF 0x68
+\ : OP_ENDIF then 0x68 write ;
 \ OP_VERIFY 0x69
 \ OP_RETURN 0x6A
 : OP_TOALTSTACK  alt altpush 0x6B write ;
@@ -68,20 +69,23 @@ include altstack.fs
 : OP_EQUAL = 0x87 write ;
 \ OP_EQUALVERIFY 0x88
 : OP_1SUB 1 - 0x8C write ;
-: OP_2MUL 2 * 0x8D write ;
-: OP_2DIV 2/ 0x8E write ;
+: OP_MUL * 0x95 write ;
+: OP_DIV / 0x96 write ;
+\ 2mul is not implemented yet
+\ : OP_2MUL 2 * 0x8D write ;
+: OP_2MUL OP_2 OP_MUL ;
+\ : OP_2DIV 2/ 0x8E write ;
+: OP_2DIV OP_2 OP_DIV ;
 \ OP_NEGATE 0x8F
-\ OP_ABS 0x90
+: OP_ABS abs 0x90 write ;
 \ OP_NOT 0x91
 \ OP_0NOTEQUAL 0x92
 : OP_ADD + 0x93 write ;
-: OP_1ADD 1 PUSHDATA OP_ADD 0x8B write ;
+: OP_1ADD 1+ 0x8B write ;
 : OP_SUB - 0x94 write ;
-: OP_MUL * 0x95 write ;
-: OP_DIV / 0x96 write ;
 : OP_MOD mod 0x97 write ;
 \ OP_LSHIFT 0x98
-\ OP_RSHIFT 0x99
+: OP_RSHIFT rshift 0x99 write ;
 \ OP_BOOLAND 0x9A
 \ OP_BOOLOR 0x9B
 \ OP_NUMEQUAL 0x9C
@@ -90,7 +94,7 @@ include altstack.fs
 : OP_LESSTHAN < 0x9F write ;
 : OP_GREATERTHAN > 0xA0 write ;
 \ OP_LESSTHANOREQUAL 0xA1
-\ OP_GREATERTHANOREQUAL 0xA2
+: OP_GREATERTHANOREQUAL >= 0xA2 write ;
 \ OP_MIN 0xA3
 \ OP_MAX 0xA4
 \ OP_WITHIN 0xA5
