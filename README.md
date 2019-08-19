@@ -10,15 +10,15 @@ What if you could ...
 Tape Recorder does exactly that. It is a Wang B Machine. It records execution as it runs and stores it onto a tape. (A tape is simply a list of computer instructions, also called a thread of execution, that is stored as Bitcoin bytecode in hex format).  
 
 Tape Recorder allows for full attestation of what was executed on your computer. It is Proof of execution of the most minute detail, data and code.  
-If it is easy and cheap to do the right thing then people will probably do it. If it is difficult and expensive then they probably wont do the right thing.  
+If it is easy and cheap to do the right thing then people will probably do it. If it is difficult and expensive then they probably wont use Bitcoin.  
 
 Tape Recorder makes it simple and unobtrusive to store data, important events and significantly, code execution onto the blockchain. Fully attestable.  
 
 Tape Recorder is an individual, personal experience. There is your device, Tape Recorder and the blockchain. (There is no world computer!) Users will have privacy settings for Tape Recorder. Users will be able to choose which events and processing they wish to capture, whether to make the data public or private and when to disclose the data downstream. When the user's role is that of an employee or public official then all of the privacy policies can be determined in an employment contract.
 
-Billions of people with a bitcoin Tape Recorder that is easy and cheap to use means that many threads of execution will be captured. Large blocks will contain lots of Bitcoin Script as well as data. Script execution will be hyper-optimized.
+Billions of people with a Bitcoin Tape Recorder that is easy and cheap to use means that many threads of execution will be captured. Large blocks will contain lots of Bitcoin Script as well as data. Script execution will be hyper-optimized.
   
-Bitcoin scales.  
+Bitcoin scales because it is simple and efficient.  
 
 # When would Tape Recorder be used?
 Bitcoin can do everything.  
@@ -34,7 +34,7 @@ Scientific data that needs to be crunched and attested to is another area.
 
 Tape Recorder could be used any time detail data is filtered, processed, grouped or summarized. Capturing the execution path between the data points is key.
 
-There is obviously a lot of hand waving here. Writing applications that are fully attestable is difficult, but we see that it is possible.
+There is obviously a lot of hand waving here. Writing applications that are fully attestable is difficult, but Tape Recorder shows that it is possible.
 
 # Tape Recorder Attestations
 Tape Recorder code has this basic structure. Lets call them attestations.
@@ -100,7 +100,7 @@ When Tape Recorder executes the high level Forth code it produces unrolled Bitco
 The code to interact with the BSV blockchain was written in JavaScript using the bsv library. It takes the output tape of Tape Recorder and stores it onchain in a Metanet transaction.
 
 # What if you hate Forth? And hate Bitcoin Script? How about Hello?
-BSV Editor will compile a high level C-like language called Hello to Bitcoin script. 
+[BSV Editor](http://www.bowmain.co.uk/BSV/index.html) will compile a high level C-like language called Hello to Bitcoin script. 
 Tape Recorder can execute the script that BSV Editor produces.
 Here is an example of looping in Hello.
 ```
@@ -116,31 +116,37 @@ There are many other possibilities for high level languages that could be execut
 
 # A Tape Recorder payment channel
 
-Another way is to run Tape Recorder as a service. Users would submit batch jobs to be run by Tape Recorder using the Bitcoin protocol. Of course the server version of Tape Recorder would be run as a direct IP2IP payment channel using the techniques in Ubiquity.
+Another way is to run Tape Recorder as a service. Users would submit batch jobs to be run by Tape Recorder using the Bitcoin protocol. Of course the payment channel version of Tape Recorder could be run as a direct IP2IP channel using the techniques in [Ubiquity](https://github.com/dfoderick/ubiquity-hackathon).
 
 # Layer 1 vs Layer 2
-Bitcoin has layers.
-Layer 1 Bitcoin is the base protocol as enforced by miner nodes.
-Layer 2 is your Bitcoin application running off chain on your computer.
+Bitcoin has layers.  
+Layer 1 Bitcoin is the base protocol as enforced by miner nodes.  
+Layer 2 is your Bitcoin application running off chain on your computer.  
+
 The Bitcoin protocol is simply data within script. Because the bitcoin protocol is valuable, it is to be used off chain in your Layer 2 application. Consequently, users execute script in Layer 2 of Bitcoin on their own CPU. Tape Recorder captures these threads of execution while interpreting your bitcoin application in Layer 2 and puts them on chain.
 
-Give a miner Layer 1 script to lock and unlock a utxo.
+Give a miner Layer 1 script to lock and unlock a utxo.  
 Give a miner Layer 2 script for attestation of a thread of execution that you have already ran on your computer.
 
 # Tape Recorder is a Wang B machine
 Bitcoin is simple.  
 A Wang B machine is a simplified Turing machine.  
 It has a Jump instruction so it can loop. It does not have an erase instruction.  
+
 A Wang B machine has a two-way tape. One side is for reading. The other side is for writing.  
 The read side is for executing (interpreting) a program. As it reads instructions it writes them to the write side of the tape. The write side of the tape is append only, non-erasable.  
+
 Tape Recorder interprets and executes your Layer 2 application as the read side of the tape. Your application can loop. As it executes your app, Tape Recorder records the instructions onto the write side of the append-only tape. Thus, the loop is unrolled. Loop unrolling happens during runtime of the application, not at compile time.  
 Consequently, your application can loop but the miner only sees an unrolled loop. Thus, a miner need not loop to validate the execution of your loopy code.  
+
 Tape recorder is a component (or adapter) that executes along side of your Layer 2 Bitcoin application.
 
 # Metanet and Tape Recorder
-In Layer 1, bitcoin transactions are chained together using digital signatures with scriptSig and scriptPubKey.  
+In Layer 1, bitcoin transactions are chained together using digital signatures with scriptSig and scriptPubKey.   
 Metanet is an overlay structure for Layer 2 applications.   
+
 Tape Recorder is a Layer 2 application that fundamentally stores threads of execution as Bitcoin Script. It should leverage the Metanet protocol as much as possible since there is a lot of good tooling for Metanet but the primary motive is to preserve the continuity of the thread of execution.  
+
 Some ideas ...   
 Transaction Output 0 would be a Metanet OP_RETURN with metadata (attributes) describing the script thread (Who, When and Why the thread was executed).  
 Transaction Output 1 would be the primary thread of execution. i.e. the script. i.e. the tape.  
@@ -153,6 +159,16 @@ When the Layer 2 tape is chained across transactions the tape is "spliced" toget
 # Notes
 
 All hackathon related files are in the hackathon folder.  
+
+# Installing Tape Recorder
+* Install gforth
+* 
+
+# Tape Recorder Walkthrough
+
+# Storing custom script on BSV Testnet
+
+Post txhex to https://api.whatsonchain.com/v1/bsv/test/tx/raw
 
 # TODO
 The following are works in progress
