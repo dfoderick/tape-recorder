@@ -219,14 +219,14 @@ include testrecorder.fs
 ```
 
 # Tape Recorder Walkthrough
-Run any of the test commands `testadd`, `testfac`, `test`, `testsqrt`, `testgcd`, `testhack`  
+Run any of the test commands `testadd`, `testfac`, `testsqrt`, `testgcd`, `testhack`  
 Tape Recorder console should respond with `-1 ok` indicating success since -1 in Forth means `true`.
 
 As you run the tests the broadcaster console will show you the tx ids that are getting stored on the blockchain. There may be a slight delay because the node file watcher polls for changes every 5 seconds or so.  
 
 You can view the transactions and the script in any BSV testnet explorer.
 
-Experiment!
+Now go ahead and Experiment. Forth is a concatenative language. Parameters are passed in the data stack. A Forth function is called a word. A series of Forth words is called a thread.
 
 The general structure of a Tape Recorder program looks like this:
 ```
@@ -237,10 +237,6 @@ Commands can be concatenated.
 ron 4 fac op_1 op_add sqrt roff .
 ```
 4! is 24. Then add 1. Then calculate the square root. The result is 5.
-
-# Storing custom script on BSV Testnet
-
-Post txhex to https://api.whatsonchain.com/v1/bsv/test/tx/raw
 
 # TODO
 The following are works in progress
