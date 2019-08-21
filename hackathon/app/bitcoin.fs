@@ -3,6 +3,12 @@ include altstack.fs
 \ defines altstack named alt with only 10 capacity
 10 altstack alt
 
+: bitcoin_verify
+    true <> if 
+        assert( false )
+    then
+;
+
 \ TODO: allow pushdata to handle multibyte data, for now assume 1 byte
 : PUSHDATA 0x01 write dup write ;
 
@@ -34,13 +40,15 @@ include altstack.fs
 : OP_16 16 0x60 write ;
 : OP_NOP 0x61 write ;
 \ TODO: how to do if/then
-\ : OP_IF if 0x63 write ;
+: OP_IF 0x63 write ;
 \ OP_NOTIF 0x64
 \ OP_ELSE 0x67
-\ : OP_ENDIF then 0x68 write ;
-\ OP_VERIFY 0x69
-\ OP_RETURN 0x6A
-: OP_TOALTSTACK  alt altpush 0x6B write ;
+: OP_ENDIF 0x68 write ;
+\ Marks transaction as invalid if top stack value is not true. The top stack value is removed.
+: OP_VERIFY bitcoin_verify 0x69 write ;
+\ has to consume TOS according to new specification
+: OP_RETURN drop 0x6A write ;
+: OP_TOALTSTACK alt altpush 0x6B write ;
 : OP_FROMALTSTACK alt altpop 0x6C write ;
 : OP_IFDUP ?dup 0x73 write ; ( If the top stack value is not 0, duplicate it.)
 : OP_DEPTH depth 0x74 write ;
@@ -70,7 +78,7 @@ include altstack.fs
 : OP_OR or 0x85 write ;
 : OP_XOR xor 0x86 write ;
 : OP_EQUAL = 0x87 write ;
-\ OP_EQUALVERIFY 0x88
+: OP_EQUALVERIFY = bitcoin_verify 0x88 write ;
 : OP_1SUB 1 - 0x8C write ;
 : OP_MUL * 0x95 write ;
 : OP_DIV / 0x96 write ;
@@ -106,7 +114,7 @@ include altstack.fs
 : OP_BOOLAND and 0x9A write ; ( should check that params are bool true or false)
 : OP_BOOLOR or 0x9B write ; ( should check that params are bool true or false)
 : OP_NUMEQUAL = 0x9C write ;
-\ OP_NUMEQUALVERIFY <> 0x9D write ;
+: OP_NUMEQUALVERIFY = bitcoin_verify 0x9D write ;
 : OP_NUMNOTEQUAL <> 0x9E write ;
 : OP_LESSTHAN < 0x9F write ;
 : OP_GREATERTHAN > 0xA0 write ;
@@ -137,3 +145,9 @@ include altstack.fs
 \ OP_RESERVED1 0x89
 \ OP_RESERVED2 0x8A
 : OP_NOP1 0xB0 write ;
+
+\ dummy opcodes.
+\ Forth while loop consumes TOS
+: OP_WHILE drop ;
+\ 
+: bitcoin_drop drop ;
