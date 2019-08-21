@@ -16,7 +16,7 @@
 : recorder-on-file w/o create-file throw to fd ;
 : recorder-on s" tape.txt" recorder-on-file ;
 : ron recorder-on ;
-: recorder-off fd close-file throw ;
+: recorder-off fd close-file throw 0 to fd ;
 : roff recorder-off ;
 : write to-hex console-or-file ;
 
