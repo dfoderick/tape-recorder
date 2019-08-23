@@ -24,9 +24,9 @@ Bitcoin scales because it is simple and efficient. Bitcoin Script bytecode is co
 
 Tape Recorder can conceviably record the execution of any application that is built upon the Bitcoin opcode primitives. Since Bitcoin is Turing complete any application could be built on Bitcoin and once executed the tape recording can be stored onchain. Not once. Each and every time it gets executed.
 
-In general, major use cases for Tape Recorder would be centered around performance contracts. Whenever you are subject to specific performance, bound by a perforance contract to perform specific duties, you can attest to your performance by recording the activity. It could be specific performance required under an employment contract or any private contract.
+In general, major use cases for Tape Recorder would be centered around performance contracts. Whenever you are subject to specific performance, bound by a performance contract to perform specific duties, you can attest to your performance by recording the activity. It could be specific performance required under an employment contract or any private contract.
 
-Not all contracts are explicit. And users may wish to caputre other computations and activities even when not bound by a contract.
+Not all contracts are explicit. And users may wish to capture other computations and activities even when not bound by a contract.
 
 Script attestations promote transparency.
 
@@ -76,7 +76,7 @@ Tape Recorder is written in Forth.
 
 Forth is very similar to Bitcoin Script. There is very little code to write when translating an application between bitcoin script and Forth.   
 
-Here is an example translation. OP_DUP is the bitcoin instruction. dup is the Forth word. 0x76 is the bitcoin bytecode.
+Here is an example translation. `OP_DUP` is the bitcoin instruction. `dup` is the Forth word. 0x76 is the bitcoin bytecode.
 ```
 : OP_DUP dup 0x76 write ;
 ```

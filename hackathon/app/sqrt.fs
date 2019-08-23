@@ -1,5 +1,5 @@
-\ Newton's method to compute square root using Bitcoin Script
-\ Not that this algorithm does not give the correct result for some integers (i.e. sqrt(3) <> 2)
+\ Newton's method to compute square root using Forth to execute to bitcoin script
+\ Note that this algorithm does not give the correct result for some integers (i.e. sqrt(3) <> 2)
 \ See https://github.com/dfoderick/tape-recorder
 include taperecorder.fs
 
