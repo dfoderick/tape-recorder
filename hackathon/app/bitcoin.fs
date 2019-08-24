@@ -1,4 +1,13 @@
 \ bitcoin opcodes implemented in forth
+\
+\ TODO: handle strings as byte array or structure. 
+\ string should be represented as one item on stack
+\ TODO: allow pushdata to handle multibyte data, for now assumes 1 byte
+\ i.e. get size of number on stack and handle endian conversion
+\ TODO: crypto functions, if needed, could be native forth or c interop
+\ TODO: handle IF/ELSE/ENDIF
+\
+
 include altstack.fs
 \ defines altstack named alt with only 10 capacity
 10 altstack alt
@@ -9,7 +18,6 @@ include altstack.fs
     then
 ;
 
-\ TODO: allow pushdata to handle multibyte data, for now assume 1 byte
 : PUSHDATA 0x01 write dup write ;
 
 : OP_FALSE false 0x00 write ;
@@ -41,8 +49,8 @@ include altstack.fs
 : OP_NOP 0x61 write ;
 \ TODO: how to do if/then
 : OP_IF 0x63 write ;
-\ OP_NOTIF 0x64
-\ OP_ELSE 0x67
+\ OP_NOTIF 0x64 write ;
+\ OP_ELSE 0x67 write ;
 : OP_ENDIF 0x68 write ;
 \ Marks transaction as invalid if top stack value is not true. The top stack value is removed.
 : OP_VERIFY bitcoin_verify 0x69 write ;
@@ -67,12 +75,52 @@ include altstack.fs
 : OP_2OVER 2over 0x70 write ;
 : OP_2ROT 2rot 0x71 write ;
 : OP_2SWAP 2swap 0x72 write ;
-\ string handling in Forth is different
-\ OP_CAT 0x7E
-\ OP_SUBSTR 0x7F
-\ OP_LEFT 0x80
-\ OP_RIGHT 0x81
-\ OP_SIZE 0x82
+
+\ ================ String Words =================
+\ string handling in Forth is different than bitcoin.
+\ bitcoin script string is a misnomer. script really just manipulates arrays of bytes
+\ TODO: switch to a byte array implementation for working with bitcoin script, but allow forth strings for simplicity
+\ for now, think of these as hack ups to experiment with ideas for supporting strings or byte arrays
+
+\ a scratch pad for intermediate string results
+create scratch 256 allot
+
+: OP_CAT ( s1 s2 -- stringout)
+    2swap ( s2 s1)
+    scratch place ( put s1 into scratch)
+    scratch +place ( append s2 )
+    scratch count ( put s1+s2 back tos)
+    0x7E write ;
+
+: OP_SUBSTR ( addr len begin size -- addr len ) 
+    \ use size as len
+    2 roll ( addr begin size len )
+    drop ( addr begin size )
+    \ add begin to addr
+    swap ( addr size begin )
+    rot ( size begin addr)
+    + ( size newaddr)
+    swap ( newaddr size)
+    0x7F write ;
+
+\ Keeps only characters left of the specified point in a string
+: OP_LEFT ( addr len newsize -- addr newsize ) 
+    \ TODO: validate size is appropriate
+    nip ( drop the old length and use the new one)
+    0x80 write ;
+\ Keeps only characters right of the specified point in a string.
+: OP_RIGHT ( addr len size -- addr+size len-size ) 
+    \ TODO: validate size is appropriate
+    rot ( len size addr)
+    over + ( len size addr+size)
+    2rot ( addr+size len size)
+    swap -  ( addr+size len-size)    
+    0x81 write ;
+\ ( Pushes the string length of the top element of the stack (without popping it))
+\ since Forth string is 2 stack items just need to dup the top of stack
+\ this will have to change! Need structure to represent a string as one stack item
+: OP_SIZE ( caddr nsize -- caddr nsize nsize) dup 0x82 write ;  
+
 : OP_INVERT invert 0x83 write ;
 : OP_AND and 0x84 write ;
 : OP_OR or 0x85 write ;
@@ -87,7 +135,7 @@ include altstack.fs
 : OP_2MUL OP_2 OP_MUL ;
 \ : OP_2DIV 2/ 0x8E write ;
 : OP_2DIV OP_2 OP_DIV ;
-: OP_NEGATE negate 0x8F ;
+: OP_NEGATE negate 0x8F write ;
 : OP_ABS abs 0x90 write ;
 \ If the input is 0 or 1, it is flipped. Otherwise the output will be 0.
 : OP_NOT 
@@ -96,7 +144,7 @@ include altstack.fs
     else
         0
     then
-    write 0x91 ;
+    0x91 write ;
 \ Returns 0 if the input is 0. 1 otherwise.
 : OP_0NOTEQUAL
     0= if 
@@ -109,7 +157,7 @@ include altstack.fs
 : OP_1ADD 1+ 0x8B write ;
 : OP_SUB - 0x94 write ;
 : OP_MOD mod 0x97 write ;
-: OP_LSHIFT lshift 0x98 ;
+: OP_LSHIFT lshift 0x98 write ;
 : OP_RSHIFT rshift 0x99 write ;
 : OP_BOOLAND and 0x9A write ; ( should check that params are bool true or false)
 : OP_BOOLOR or 0x9B write ; ( should check that params are bool true or false)

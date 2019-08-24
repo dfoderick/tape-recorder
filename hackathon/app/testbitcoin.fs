@@ -27,3 +27,24 @@ t-not-f2
 t-0notequal-f
 t-0notequal-p
 t-0notequal-p2
+
+cr \ OP_CAT
+: t-cat s" hello" s" world" OP_CAT s" helloworld" compare 0 = . ;
+t-cat
+clearstack
+cr \ op_size
+: t-size s" hitape" OP_SIZE 6 = . ;
+t-size
+clearstack
+cr \ op_left
+: t-left s" helloworld" 5 OP_LEFT s" hello" compare 0 = . ;
+t-left
+clearstack
+cr \ op_right
+: t-right s" helloworld" 5 OP_RIGHT s" world" compare 0 = . ;
+t-right
+clearstack
+cr \ op_substr
+: t-substr s" helloworld" 3 3 OP_SUBSTR s" low" compare 0 = . ;
+t-substr
+clearstack
