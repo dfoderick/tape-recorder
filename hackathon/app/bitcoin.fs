@@ -92,30 +92,61 @@ create scratch 256 allot
     scratch count ( put s1+s2 back tos)
     0x7E write ;
 
-: OP_SUBSTR ( addr len begin size -- addr len ) 
-    \ use size as len
-    2 roll ( addr begin size len )
-    drop ( addr begin size )
-    \ add begin to addr
-    swap ( addr size begin )
-    rot ( size begin addr)
-    + ( size newaddr)
-    swap ( newaddr size)
-    0x7F write ;
+\ bsv does not have substr, use split
+\ : OP_SUBSTR ( addr len begin size -- addr len ) 
+\    \ use size as len
+\    2 roll ( addr begin size len )
+\    drop ( addr begin size )
+\    \ add begin to addr
+\    swap ( addr size begin )
+\    rot ( size begin addr)
+\    + ( size newaddr)
+\    swap ( newaddr size)
 
 \ Keeps only characters left of the specified point in a string
-: OP_LEFT ( addr len newsize -- addr newsize ) 
-    \ TODO: validate size is appropriate
+: bitcoin_left ( addr len newsize -- addr newsize ) 
     nip ( drop the old length and use the new one)
-    0x80 write ;
+;
+
 \ Keeps only characters right of the specified point in a string.
-: OP_RIGHT ( addr len size -- addr+size len-size ) 
-    \ TODO: validate size is appropriate
-    rot ( len size addr)
-    over + ( len size addr+size)
-    2rot ( addr+size len size)
-    swap -  ( addr+size len-size)    
+: bitcoin_right ( addr len size -- addr+size size ) 
+    dup >r ( addr len size)
+    \ get difference
+    - ( addr len-size)
+    + ( newaddr )
+    \ use new size
+    r> ( newaddr size)
+;
+
+\ Splits a string, TODO: please refactor
+create scratch_split 256 allot
+: OP_SPLIT ( addr len num -- right left )
+    rot ( len num addr )
+    rot ( num addr len )
+    2dup 
+    2>r ( addr,len to alt stack )
+    2 pick ( num addr len num )
+    swap ( num addr num len )
+    dup >r ( moves len to alt )
+    swap - ( num addr len-num )
+    r> swap ( num addr len len-num)
+    bitcoin_right ( num right )
+    scratch_split place ( num )
+    2r> ( num addr len )
+    rot ( addr len num )
+    bitcoin_left ( left )
+    scratch_split count ( left right )
+    2swap ( right left )
+    0x7F write ;
+
+: OP_NUM2BIN
+\ todo
+    0x80 write ;
+
+: OP_BIN2NUM 
+\ todo
     0x81 write ;
+
 \ ( Pushes the string length of the top element of the stack (without popping it))
 \ since Forth string is 2 stack items just need to dup the top of stack
 \ this will have to change! Need structure to represent a string as one stack item
