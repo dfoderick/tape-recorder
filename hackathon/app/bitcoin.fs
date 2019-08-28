@@ -4,7 +4,7 @@
 \ string should be represented as one item on stack
 \ TODO: allow pushdata to handle multibyte data, for now assumes 1 byte
 \ i.e. get size of number on stack and handle endian conversion
-\ TODO: crypto functions, if needed, could be native forth or c interop
+\ TODO: crypto functions, if needed, could be c or javascript interop
 \ TODO: handle IF/ELSE/ENDIF
 \
 
@@ -54,6 +54,8 @@ include altstack.fs
 : OP_ENDIF 0x68 write ;
 \ Marks transaction as invalid if top stack value is not true. The top stack value is removed.
 : OP_VERIFY bitcoin_verify 0x69 write ;
+
+\ =============== Stack words ============================
 \ has to consume TOS according to new specification
 : OP_RETURN drop 0x6A write ;
 : OP_TOALTSTACK alt altpush 0x6B write ;
@@ -140,11 +142,19 @@ create scratch_split 256 allot
     0x7F write ;
 
 : OP_NUM2BIN
-\ todo
+\ TODO
+\ Convert the numeric value into a byte sequence of a certain size, taking account of the sign bit. 
+\ The byte sequence produced uses the little-endian encoding.
+\ 2 4 OP_NUM2BIN -> {0x02, 0x00, 0x00, 0x00}
+\ -5 4 OP_NUM2BIN -> {0x05, 0x00, 0x00, 0x80}
     0x80 write ;
 
 : OP_BIN2NUM 
-\ todo
+\ TODO
+\ Convert the byte sequence into a numeric value, including minimal encoding. 
+\ The byte sequence must encode the value in little-endian encoding.
+\ {0x02, 0x00, 0x00, 0x00, 0x00} OP_BIN2NUM -> 2. 0x0200000000 in little-endian encoding has value 2.
+\ {0x05, 0x00, 0x80} OP_BIN2NUM -> -5 - 0x050080 in little-endian encoding has value -5.
     0x81 write ;
 
 \ ( Pushes the string length of the top element of the stack (without popping it))
