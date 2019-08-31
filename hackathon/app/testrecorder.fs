@@ -1,15 +1,18 @@
 \ testing words
+require ttester.fs
+
 \ simple add. 1 + 1 = 2
-: testadd recorder-on 1 PUSHDATA 1 PUSHDATA OP_ADD 2 PUSHDATA OP_EQUAL recorder-off cr . ;
-: testadd_op recorder-on OP_1 OP_1 OP_ADD OP_2 OP_EQUAL recorder-off cr . ;
-\ testadd
+: testadd recorder-on 1 PUSHDATA 1 PUSHDATA OP_ADD recorder-off ;
+: testadd_op recorder-on OP_1 OP_1 OP_ADD recorder-off ;
+clearstack T{ testadd -> 2 }T
 
 \ looping factorial
 \ notice I am only recording the necessary calculations for a thread of execution
 \ looping outer constructs are not getting recorded for these demos
 : fac 1 PUSHDATA swap 1+ 1 ?do i PUSHDATA OP_MUL loop ;
-: testfac recorder-on 5 fac 120 PUSHDATA OP_EQUAL recorder-off cr . ;
-\ testfac
+: testfac recorder-on 5 fac recorder-off ;
+T{ 5 fac -> 120 }T
+clearstack T{ testfac -> 120 }T
 
 \ looping square root
 \ this is native forth implementation
@@ -32,8 +35,8 @@
         OP_DUP OP_2DIV ( n  n/2 ) 10 0 DO xnew LOOP OP_NIP
         ;
 
-: testsqrt recorder-on 9 PUSHDATA sqrt 3 PUSHDATA OP_EQUAL recorder-off cr . ;
-\ testsqrt
+: testsqrt recorder-on 9 PUSHDATA sqrt recorder-off ;
+clearstack T{ testsqrt -> 3 }T
 
 \ looping greatest common divisor
  : gcd ( a b -- n )
@@ -44,10 +47,11 @@
 		dup
 	0= until
 	OP_DROP ;
-: testgcd recorder-on 105 PUSHDATA 28 PUSHDATA gcd 7 PUSHDATA OP_EQUAL recorder-off cr . ;
-\ testgcd
+: testgcd recorder-on 105 PUSHDATA 28 PUSHDATA gcd recorder-off ;
+clearstack
+T{ testgcd -> 7 }T
 
 \ test high level language Hello compiled to bitcoin script
 include hack.fs
-: testhack recorder-on hello_compiled OP_5 OP_EQUAL recorder-off cr . ;
-\ testhack
+: testhack recorder-on hello_compiled recorder-off ;
+clearstack T{ testhack -> 5 }T 

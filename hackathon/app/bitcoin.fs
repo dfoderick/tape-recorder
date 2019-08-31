@@ -7,6 +7,7 @@
 \ TODO: crypto functions, if needed, could be c or javascript interop
 \ TODO: handle IF/ELSE/ENDIF
 \
+include functions.fs
 
 include altstack.fs
 \ defines altstack named alt with only 10 capacity
@@ -18,19 +19,12 @@ include altstack.fs
     then
 ;
 
-: PUSHDATA 0x01 write dup write ;
-
-: OP_FALSE false 0x00 write ;
-: OP_0 OP_FALSE ;
-\ 01 - 4b literals
-\ OP_PUSHDATA1 0x4C ( The next byte contains the number of bytes to be pushed onto the stack.)
-\ OP_PUSHDATA2 0x4D ( The next two bytes contain the number of bytes to be pushed onto the stack in little endian order)
-\ OP_PUSHDATA4 0x4E
-: OP_1NEGATE -1 0x4F write ;
+: OP_FALSE false ;
+: OP_0 OP_FALSE 0x00 write ;
 \ should be 0x01 or true?
 \ or do we have to redefine forth true to be 0x01?
-: OP_TRUE 0x01 0x51 write ;
-: OP_1 OP_TRUE ;
+: OP_TRUE 1 ;
+: OP_1 OP_TRUE 0x51 write ;
 : OP_2 2 0x52 write ;
 : OP_3 3 0x53 write ;
 : OP_4 4 0x54 write ;
@@ -47,6 +41,76 @@ include altstack.fs
 : OP_15 15 0x5F write ;
 : OP_16 16 0x60 write ;
 : OP_NOP 0x61 write ;
+
+\ push specially encoded 0 through F onto stack
+: PUSH1HEX
+    dup
+    case 
+    1 of drop OP_1 endof
+    2 of drop OP_2 endof
+    3 of drop OP_3 endof
+    4 of drop OP_4 endof
+    5 of drop OP_5 endof
+    6 of drop OP_6 endof
+    7 of drop OP_7 endof
+    8 of drop OP_8 endof
+    9 of drop OP_9 endof
+    10 of drop OP_10 endof
+    11 of drop OP_11 endof
+    12 of drop OP_12 endof
+    13 of drop OP_13 endof
+    14 of drop OP_14 endof
+    15 of drop OP_15 endof
+    16 of drop OP_16 endof
+    s" PUSH1HEX bad value" exception throw
+    endcase
+;
+
+\ ( The next byte contains the number of bytes to be pushed onto the stack.)
+: OP_PUSHDATA1 0x4C write
+    dup SizeOfNumberInBytes write
+    \ push data, should enforce size is less than 256
+    dup write
+; 
+
+\ ( The next two bytes contain the number of bytes to be pushed onto the stack in little endian order)
+: OP_PUSHDATA2 0x4D write
+    s" not implemented yet" exception throw
+;
+
+\ OP_PUSHDATA4 0x4E
+
+\ push minimally encoded data onto stack
+: PUSHDATA 
+    dup 0 <
+    if
+        \ TODO: handle negatives
+        0x01 write dup write
+    else
+        dup 16 <= 
+        if
+            \ 0 - F
+            PUSH1HEX
+        else
+            dup 0x4B <= 
+            if
+                \ 10 - 4B
+                0x01 write dup write
+            else
+                dup SizeOfNumberInBytes 255 <= 
+                if 
+                    \ Data size <= 255 bytes
+                    OP_PUSHDATA1
+                else
+                    \ Data size > 255 bytes
+                    OP_PUSHDATA2
+                then
+            then
+        then
+    then
+;
+
+: OP_1NEGATE -1 0x4F write ;
 \ TODO: how to do if/then
 : OP_IF 0x63 write ;
 \ OP_NOTIF 0x64 write ;
