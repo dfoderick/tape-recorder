@@ -9,7 +9,7 @@
 \
 include functions.fs
 
-include altstack.fs
+include lib/altstack.fs
 \ defines altstack named alt with only 10 capacity
 10 altstack alt
 

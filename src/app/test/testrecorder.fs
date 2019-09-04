@@ -52,6 +52,6 @@ clearstack
 T{ testgcd -> 7 }T
 
 \ test high level language Hello compiled to bitcoin script
-include hack.fs
-: testhack recorder-on hello_compiled recorder-off ;
-clearstack T{ testhack -> 5 }T 
+\ include hack.fs
+\ : testhack recorder-on hello_compiled recorder-off ;
+\ clearstack T{ testhack -> 5 }T 
