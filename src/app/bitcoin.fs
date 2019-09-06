@@ -8,16 +8,7 @@
 \ TODO: handle IF/ELSE/ENDIF
 \
 include functions.fs
-
-include lib/altstack.fs
-\ defines altstack named alt with only 10 capacity
-10 altstack alt
-
-: bitcoin_verify
-    true <> if 
-        assert( false )
-    then
-;
+require bitcoin-common.fs
 
 : OP_FALSE false ;
 : OP_0 OP_FALSE 0x00 write ;
@@ -40,7 +31,6 @@ include lib/altstack.fs
 : OP_14 14 0x5E write ;
 : OP_15 15 0x5F write ;
 : OP_16 16 0x60 write ;
-: OP_NOP 0x61 write ;
 
 \ push specially encoded 0 through F onto stack
 : PUSH1HEX
@@ -118,29 +108,7 @@ include lib/altstack.fs
 : OP_ENDIF 0x68 write ;
 \ Marks transaction as invalid if top stack value is not true. The top stack value is removed.
 : OP_VERIFY bitcoin_verify 0x69 write ;
-
-\ =============== Stack words ============================
-\ has to consume TOS according to new specification
-: OP_RETURN drop 0x6A write ;
-: OP_TOALTSTACK alt altpush 0x6B write ;
-: OP_FROMALTSTACK alt altpop 0x6C write ;
 : OP_IFDUP ?dup 0x73 write ; ( If the top stack value is not 0, duplicate it.)
-: OP_DEPTH depth 0x74 write ;
-: OP_DROP drop 0x75 write ;
-: OP_DUP dup 0x76 write ;
-: OP_NIP nip 0x77 write ;
-: OP_OVER over 0x78 write ;
-: OP_PICK pick 0x79 write ;
-: OP_ROLL roll 0x7A write ;
-: OP_ROT rot 0x7B write ;
-: OP_SWAP swap 0x7C write ;
-: OP_TUCK tuck 0x7D write ;
-: OP_2DROP 2drop 0x6D write ;
-: OP_2DUP 2dup 0x6E write ;
-: OP_3DUP dup 2over rot 0x6F write ;
-: OP_2OVER 2over 0x70 write ;
-: OP_2ROT 2rot 0x71 write ;
-: OP_2SWAP 2swap 0x72 write ;
 
 \ ================ String Words =================
 \ string handling in Forth is different than bitcoin.
@@ -276,12 +244,12 @@ create scratch_split 256 allot
 : OP_MIN min 0xA3 write ;
 : OP_MAX max 0xA4 write ;
 : OP_WITHIN within 0xA5 write ;
+
 \ OP_RIPEMD160 0xA6
 \ OP_SHA1 0xA7
 \ OP_SHA256 0xA8
 \ OP_HASH160 0xA9
 \ OP_HASH256 0xAA
-: OP_CODESEPARATOR 0xAB write ;
 \ OP_CHECKSIG 0xAC
 \ OP_CHECKSIGVERIFY 0xAD
 \ OP_CHECKMULTISIG 0xAE
@@ -298,9 +266,3 @@ create scratch_split 256 allot
 \ OP_RESERVED1 0x89
 \ OP_RESERVED2 0x8A
 : OP_NOP1 0xB0 write ;
-
-\ dummy opcodes.
-\ Forth while loop consumes TOS
-: OP_WHILE drop ;
-\ 
-: bitcoin_drop drop ;

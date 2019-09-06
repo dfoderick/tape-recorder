@@ -1,6 +1,6 @@
 \ basic bitcoin tests
 require ttester.fs
-require ../bitcoin.fs
+include ../bitcoin.fs
 cr
 T{ OP_1 OP_1 OP_ADD -> 2 }T
 T{ 1 OP_IFDUP -> 1 1 }T
